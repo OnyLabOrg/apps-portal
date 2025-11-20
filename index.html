@@ -74,10 +74,6 @@
             globe: {
                 path: '<circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><line x1="2.1" y1="12" x2="21.9" y2="12"/>',
                 name: 'OnyLab 2'
-            },
-            settings: {
-                path: '<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.44a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zM4 12.22v-.44a2 2 0 0 1 2-2h.44a2 2 0 0 1 2 2v.44a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM12.22 20h-.44a2 2 0 0 0-2 2v.44a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.44a2 2 0 0 0-2-2zM20 12.22v-.44a2 2 0 0 1 2-2h.44a2 2 0 0 1 2 2v.44a2 2 0 0 1-2 2h-.44a2 2 0 0 1-2-2z"/>',
-                name: 'OnyLab 3'
             }
         };
 
@@ -92,7 +88,7 @@
                     data: {
                         labels: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
                         datasets: [{
-                            label: 'Sessions Actives',
+                            label: 'Commandes',
                             data: [65, 59, 80, 81, 56, 55, 40],
                             borderColor: '#007aff', 
                             backgroundColor: 'rgba(0, 122, 255, 0.1)',
@@ -102,7 +98,7 @@
                             pointBackgroundColor: '#007aff',
                             pointHoverRadius: 6,
                         }, {
-                            label: 'Nouveaux Inscrits',
+                            label: 'Nouveaux Clients',
                             data: [15, 20, 18, 25, 22, 30, 19],
                             borderColor: '#34c759', 
                             backgroundColor: 'rgba(52, 199, 89, 0.1)',
@@ -209,9 +205,9 @@
 
         window.onload = () => {
             document.getElementById('btn-home').innerHTML = svgIcon(icons.home.path, icons.home.name);
-            document.getElementById('btn-link1').innerHTML = svgIcon(icons.link.path, icons.link.name);
+            document.getElementById('btn-link1').innerHTML = svgIcon(icons.globe.path, icons.globe.name);
             document.getElementById('btn-link2').innerHTML = svgIcon(icons.globe.path, icons.globe.name);
-            document.getElementById('btn-link3').innerHTML = svgIcon(icons.settings.path, icons.settings.name);
+            document.getElementById('btn-link3').innerHTML = svgIcon(icons.link.path, icons.link.name);
 
             document.querySelectorAll('.tab-button').forEach(button => {
                 button.addEventListener('click', () => {
@@ -235,7 +231,7 @@
             <p class="text-lg text-gray-600 mb-8">Bienvenue dans votre interface de gestion simplifiée.</p>
             
             <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 mb-8">
-                <h2 class="text-xl font-semibold text-gray-800 mb-4">Performance des Utilisateurs (7 derniers jours)</h2>
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Performance (7 derniers jours)</h2>
                 <div class="relative h-64">
                     <canvas id="userPerformanceChart"></canvas>
                 </div>
@@ -259,7 +255,7 @@
                         <span class="p-3 rounded-full bg-yellow-100 text-yellow-600">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1z"/></svg>
                         </span>
-                        <p class="text-sm font-medium text-gray-500">Utilisateurs actifs</p>
+                        <p class="text-sm font-medium text-gray-500">Clients actifs</p>
                     </div>
                     <p class="text-3xl font-bold text-gray-800 mt-2">1,245</p>
                     <p class="text-xs text-red-500 mt-1">-5% par rapport à hier.</p>
@@ -275,12 +271,7 @@
                     <p class="text-3xl font-bold text-gray-800 mt-2">4.7%</p>
                     <p class="text-xs text-green-500 mt-1">+0.3% ce mois-ci.</p>
                 </div>
-
             </div>
-
-            <p class="mt-8 text-sm text-gray-500">
-                Remarque : Les données ci-dessus sont des exemples de simulation. Pour voir le contenu des autres onglets, cliquez sur les liens OnyLab ci-dessous.
-            </p>
         </div>
 
         <div id="tab2-content" class="tab-content hidden h-full">
