@@ -180,24 +180,23 @@
                 const iframe = document.getElementById(`iframe${tabIndex}`);
                 //if (iframe && iframe.src === '') {
                 if (iframe) {
-                    iframe.src = 'https://manager.portal.apps.onylab.com/dashboard?account_id=1nxjk';
+                    iframe.src = 'https://manager.portal.apps.onylab.com/dashboard';
                     console.log(`Chargement de l'iframe pour l'onglet ${tabIndex}`);
                 }
             }
 
             if (tabIndex === 3) {
                 const iframe = document.getElementById(`iframe${tabIndex}`);
-                //if (iframe && iframe.src === '') {
                 if (iframe) {
-                    iframe.src = 'http://manager.portal.apps.onylab.com/dashboard?account_id=1nxjk';
+                    iframe.src = 'http://orderline.portal.apps.onylab.com';
                     console.log(`Chargement de l'iframe pour l'onglet ${tabIndex}`);
                 }
             }
 
-            if (tabIndex > 3) {
+            if (tabIndex === 4) {
                 const iframe = document.getElementById(`iframe${tabIndex}`);
                 if (iframe) {
-                    iframe.src = 'https://onylab.com/';
+                    iframe.src = 'http://catalog.portal.apps.onylab.com';
                     console.log(`Chargement de l'iframe pour l'onglet ${tabIndex}`);
                 }
             }
