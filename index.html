@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    <style>
+        html { font-family: 'Inter', sans-serif; }
+
+        body {
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; 
+            background-color: #f7f7f7;
+        }
+
+        .content-container {
+            flex-grow: 1;
+            padding-bottom: 80px; 
+            overflow-y: auto; 
+            -webkit-overflow-scrolling: touch; 
+        }
+
+        .iframe-container {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .iframe-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .tab-bar {
+            height: 70px; 
+            padding-bottom: env(safe-area-inset-bottom); 
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 50;
+        }
+        
+        .tab-button.active .icon-container {
+            color: #007aff; 
+        }
+        .tab-button:not(.active) .icon-container {
+            color: #999;
+        }
+        .tab-button.active .tab-label {
+            color: #007aff;
+        }
+    </style>
+    <script>
+        const svgIcon = (path, name) => `
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 transition-colors duration-150">
+                ${path}
+            </svg>
+            <span class="tab-label text-xs mt-1 transition-colors duration-150">${name}</span>
+        `;
+        
+        const icons = {
+            home: { 
+                path: '<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
+                name: 'Tableau de bord'
+            },
+            link: {
+                path: '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.74 1.74"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.74-1.74"/>',
+                name: 'OnyLab 1'
+            },
+            globe: {
+                path: '<circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><line x1="2.1" y1="12" x2="21.9" y2="12"/>',
+                name: 'OnyLab 2'
+            },
+            settings: {
+                path: '<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.44a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zM4 12.22v-.44a2 2 0 0 1 2-2h.44a2 2 0 0 1 2 2v.44a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM12.22 20h-.44a2 2 0 0 0-2 2v.44a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.44a2 2 0 0 0-2-2zM20 12.22v-.44a2 2 0 0 1 2-2h.44a2 2 0 0 1 2 2v.44a2 2 0 0 1-2 2h-.44a2 2 0 0 1-2-2z"/>',
+                name: 'OnyLab 3'
+            }
+        };
+
+        let currentTab = 1;
+
+        const initializeChart = () => {
+            const ctx = document.getElementById('userPerformanceChart');
+
+            if (ctx && typeof Chart !== 'undefined') {
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
+                        datasets: [{
+                            label: 'Sessions Actives',
+                            data: [65, 59, 80, 81, 56, 55, 40],
+                            borderColor: '#007aff', 
+                            backgroundColor: 'rgba(0, 122, 255, 0.1)',
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#007aff',
+                            pointHoverRadius: 6,
+                        }, {
+                            label: 'Nouveaux Inscrits',
+                            data: [15, 20, 18, 25, 22, 30, 19],
+                            borderColor: '#34c759', 
+                            backgroundColor: 'rgba(52, 199, 89, 0.1)',
+                            fill: false,
+                            tension: 0.4,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#34c759',
+                            pointHoverRadius: 6,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false, 
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: 'rgba(200, 200, 200, 0.3)'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    usePointStyle: true,
+                                    padding: 20
+                                }
+                            },
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                                backgroundColor: 'rgba(0,0,0,0.8)',
+                                titleFont: { size: 14, weight: 'bold' },
+                                bodyFont: { size: 12 },
+                                padding: 10,
+                                cornerRadius: 8
+                            }
+                        }
+                    }
+                });
+            }
+        };
+
+        const showTab = (tabIndex) => {
+            if (tabIndex === currentTab) return; 
+
+            currentTab = tabIndex;
+
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+                content.classList.remove('flex'); 
+            });
+            
+            const activeContent = document.getElementById(`tab${tabIndex}-content`);
+            if (activeContent) {
+                activeContent.classList.remove('hidden');
+                
+                if (tabIndex > 1) {
+                    activeContent.classList.add('flex'); 
+                }
+            }
+
+            document.querySelectorAll('.tab-button').forEach(button => {
+                const buttonIndex = parseInt(button.getAttribute('data-tab'));
+                if (buttonIndex === tabIndex) {
+                    button.classList.add('active');
+                } else {
+                    button.classList.remove('active');
+                }
+            });
+
+            if (tabIndex === 2) {
+                const iframe = document.getElementById(`iframe${tabIndex}`);
+                if (iframe && iframe.src === '') {
+                    iframe.src = 'https://manager.portal.apps.onylab.com/dashboard?account_id=1nxjk';
+                    console.log(`Chargement de l'iframe pour l'onglet ${tabIndex}`);
+                }
+            }
+
+            if (tabIndex > 1) {
+                const iframe = document.getElementById(`iframe${tabIndex}`);
+                if (iframe && iframe.src === '') {
+                    iframe.src = 'https://onylab.com/';
+                    console.log(`Chargement de l'iframe pour l'onglet ${tabIndex}`);
+                }
+            }
+        };
+
+        window.onload = () => {
+            document.getElementById('btn-home').innerHTML = svgIcon(icons.home.path, icons.home.name);
+            document.getElementById('btn-link1').innerHTML = svgIcon(icons.link.path, icons.link.name);
+            document.getElementById('btn-link2').innerHTML = svgIcon(icons.globe.path, icons.globe.name);
+            document.getElementById('btn-link3').innerHTML = svgIcon(icons.settings.path, icons.settings.name);
+
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabIndex = parseInt(button.getAttribute('data-tab'));
+                    showTab(tabIndex);
+                });
+            });
+
+            initializeChart();
+
+            showTab(1);
+        };
+    </script>
+</head>
+<body>
+    
+    <div class="content-container bg-gray-50 flex-1 relative">
+
+        <div id="tab1-content" class="tab-content h-full p-4 md:p-8 overflow-y-auto">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-6">Tableau de bord</h1>
+            <p class="text-lg text-gray-600 mb-8">Bienvenue dans votre interface de gestion simplifiée.</p>
+            
+            <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 mb-8">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Performance des Utilisateurs (7 derniers jours)</h2>
+                <div class="relative h-64">
+                    <canvas id="userPerformanceChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                
+                <div class="bg-white p-5 rounded-xl shadow-lg border border-gray-100 transform hover:scale-[1.02] transition duration-200 cursor-pointer">
+                    <div class="flex items-center space-x-3">
+                        <span class="p-3 rounded-full bg-blue-100 text-blue-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c1.657 0 3 .895 3 2s-1.343 2-3 2-3-.895-3-2 1.343-2 3-2zM12 21c-4.418 0-8-3.582-8-8 0-4.418 3.582-8 8-8s8 3.582 8 8c0 4.418-3.582 8-8 8z"/></svg>
+                        </span>
+                        <p class="text-sm font-medium text-gray-500">Statut des services</p>
+                    </div>
+                    <p class="text-3xl font-bold text-gray-800 mt-2">Opérationnel</p>
+                    <p class="text-xs text-green-500 mt-1">Tous les systèmes sont fonctionnels.</p>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl shadow-lg border border-gray-100 transform hover:scale-[1.02] transition duration-200 cursor-pointer">
+                    <div class="flex items-center space-x-3">
+                        <span class="p-3 rounded-full bg-yellow-100 text-yellow-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1z"/></svg>
+                        </span>
+                        <p class="text-sm font-medium text-gray-500">Utilisateurs actifs</p>
+                    </div>
+                    <p class="text-3xl font-bold text-gray-800 mt-2">1,245</p>
+                    <p class="text-xs text-red-500 mt-1">-5% par rapport à hier.</p>
+                </div>
+                
+                <div class="bg-white p-5 rounded-xl shadow-lg border border-gray-100 transform hover:scale-[1.02] transition duration-200 cursor-pointer">
+                    <div class="flex items-center space-x-3">
+                        <span class="p-3 rounded-full bg-red-100 text-red-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                        </span>
+                        <p class="text-sm font-medium text-gray-500">Taux de conversion</p>
+                    </div>
+                    <p class="text-3xl font-bold text-gray-800 mt-2">4.7%</p>
+                    <p class="text-xs text-green-500 mt-1">+0.3% ce mois-ci.</p>
+                </div>
+
+            </div>
+
+            <p class="mt-8 text-sm text-gray-500">
+                Remarque : Les données ci-dessus sont des exemples de simulation. Pour voir le contenu des autres onglets, cliquez sur les liens OnyLab ci-dessous.
+            </p>
+        </div>
+
+        <div id="tab2-content" class="tab-content hidden h-full">
+            <div class="iframe-container">
+                <iframe id="iframe2" src="" loading="lazy"></iframe>
+            </div>
+            <div class="absolute inset-0 bg-white/90 flex items-center justify-center p-4 text-center text-sm text-red-600 opacity-0 transition duration-500" style="pointer-events: none;">
+                <p>L'iframe 1 peut ne pas s'afficher si onylab.com bloque l'intégration externe.</p>
+            </div>
+        </div>
+
+        <div id="tab3-content" class="tab-content hidden h-full">
+            <div class="iframe-container">
+                <iframe id="iframe3" src="" loading="lazy"></iframe>
+            </div>
+            <div class="absolute inset-0 bg-white/90 flex items-center justify-center p-4 text-center text-sm text-red-600 opacity-0 transition duration-500" style="pointer-events: none;">
+                <p>L'iframe 2 peut ne pas s'afficher si onylab.com bloque l'intégration externe.</p>
+            </div>
+        </div>
+
+        <div id="tab4-content" class="tab-content hidden h-full">
+            <div class="iframe-container">
+                <iframe id="iframe4" src="" loading="lazy"></iframe>
+            </div>
+            <div class="absolute inset-0 bg-white/90 flex items-center justify-center p-4 text-center text-sm text-red-600 opacity-0 transition duration-500" style="pointer-events: none;">
+                <p>L'iframe 3 peut ne pas s'afficher si onylab.com bloque l'intégration externe.</p>
+            </div>
+        </div>
+    </div>
+    
+    <nav class="fixed bottom-0 left-0 right-0 bg-white tab-bar">
+        <div class="flex h-full justify-around items-start pt-2">
+
+            <button id="btn-home" data-tab="1" class="tab-button active flex flex-col items-center justify-center w-1/4 h-full text-gray-900 focus:outline-none">
+                <div class="icon-container flex flex-col items-center">
+                </div>
+            </button>
+
+            <button id="btn-link1" data-tab="2" class="tab-button flex flex-col items-center justify-center w-1/4 h-full text-gray-900 focus:outline-none">
+                <div class="icon-container flex flex-col items-center">
+                </div>
+            </button>
+
+            <button id="btn-link2" data-tab="3" class="tab-button flex flex-col items-center justify-center w-1/4 h-full text-gray-900 focus:outline-none">
+                <div class="icon-container flex flex-col items-center">
+                </div>
+            </button>
+
+            <button id="btn-link3" data-tab="4" class="tab-button flex flex-col items-center justify-center w-1/4 h-full text-gray-900 focus:outline-none">
+                <div class="icon-container flex flex-col items-center">
+                </div>
+            </button>
+        </div>
+    </nav>
+
+</body>
+</html>
