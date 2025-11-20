@@ -189,7 +189,16 @@
                 }
             }
 
-            if (tabIndex > 2) {
+            if (tabIndex === 3) {
+                const iframe = document.getElementById(`iframe${tabIndex}`);
+                //if (iframe && iframe.src === '') {
+                if (iframe) {
+                    iframe.src = 'http://manager.portal.apps.onylab.com/dashboard?account_id=1nxjk';
+                    console.log(`Chargement de l'iframe pour l'onglet ${tabIndex}`);
+                }
+            }
+
+            if (tabIndex > 3) {
                 const iframe = document.getElementById(`iframe${tabIndex}`);
                 if (iframe) {
                     iframe.src = 'https://onylab.com/';
