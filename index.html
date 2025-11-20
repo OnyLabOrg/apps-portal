@@ -190,17 +190,17 @@
 
             if (tabIndex === 2) {
                 const iframe = document.getElementById(`iframe${tabIndex}`);
-                //if (iframe && iframe.src === '') {
                 if (iframe) {
-                    iframe.src = 'https://manager.portal.apps.onylab.com/dashboard';
+                    iframe.src = 'http://orderline.portal.apps.onylab.com';
                     console.log(`Chargement de l'iframe pour l'onglet ${tabIndex}`);
                 }
             }
 
             if (tabIndex === 3) {
                 const iframe = document.getElementById(`iframe${tabIndex}`);
+                //if (iframe && iframe.src === '') {
                 if (iframe) {
-                    iframe.src = 'http://orderline.portal.apps.onylab.com';
+                    iframe.src = 'https://manager.portal.apps.onylab.com/dashboard';
                     console.log(`Chargement de l'iframe pour l'onglet ${tabIndex}`);
                 }
             }
@@ -216,8 +216,8 @@
 
         window.onload = () => {
             document.getElementById('btn-home').innerHTML = svgIcon(icons.home.path, icons.home.name);
-            document.getElementById('btn-link1').innerHTML = svgIcon(icons.graph.path, icons.graph.name);
-            document.getElementById('btn-link2').innerHTML = svgIcon(icons.order.path, icons.order.name);
+            document.getElementById('btn-link1').innerHTML = svgIcon(icons.order.path, icons.order.name);
+            document.getElementById('btn-link2').innerHTML = svgIcon(icons.graph.path, icons.graph.name);
             document.getElementById('btn-link3').innerHTML = svgIcon(icons.catalog.path, icons.catalog.name);
 
             document.querySelectorAll('.tab-button').forEach(button => {
