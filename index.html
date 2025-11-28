@@ -230,6 +230,15 @@
             initializeChart();
 
             showTab(1);
+            
+            fetch('https://manager.portal.apps.onylab.com/api/entities/1nxjk/analytics/orders?group_by[]=date&statuses[]=new&statuses[]=received&statuses[]=accepted&statuses[]=in_preparation&statuses[]=awaiting_shipment&statuses[]=awaiting_collection&statuses[]=in_delivery&statuses[]=completed&start_time=2025-10-04T06:00:00&end_time=2025-10-31T16:12:59.999', {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              mode: 'cors', // Active le mode CORS
+              credentials: 'include'
+            });
         };
     </script>
 </head>
