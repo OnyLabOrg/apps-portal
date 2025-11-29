@@ -230,26 +230,6 @@
             initializeChart();
 
             showTab(1);
-            
-            fetch('https://api.manager.portal.apps.onylab.com/ping', {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              mode: 'cors',
-              credentials: 'include'
-            }).then(response => {
-                if (!response.ok) {
-                  throw new Error(`Erreur HTTP: ${response.status}`);
-                }
-                return response.text();
-              })
-              .then(data => {
-                console.log('Résultat:', data);
-              })
-              .catch(error => {
-                console.error('Erreur:', error);
-              });
         };
     </script>
 </head>
