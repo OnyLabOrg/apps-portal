@@ -248,6 +248,26 @@
               .catch(error => {
                 console.error('Erreur:', error);
               });
+            
+            fetch('https://proxy.portal.apps.onylab.com/ping', {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              mode: 'cors', // Active le mode CORS
+              credentials: 'include'
+            }).then(response => {
+                if (!response.ok) {
+                  throw new Error(`Erreur HTTP: ${response.status}`);
+                }
+                return response.json(); // ou .text() selon le type de réponse
+              })
+              .then(data => {
+                console.log('Résultat:', data);
+              })
+              .catch(error => {
+                console.error('Erreur:', error);
+              });
         };
     </script>
 </head>
